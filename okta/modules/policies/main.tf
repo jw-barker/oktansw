@@ -1,12 +1,3 @@
-variable "okta_policies" {
-  description = "List of Okta policies"
-  type        = list(object({
-    name     = string
-    type     = string
-    settings = map(any)
-  }))
-}
-
 resource "okta_policy" "policies" {
   count = length(var.okta_policies)
 
