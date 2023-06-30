@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - main
+  pull_request:
 
 jobs:
   terraform:
@@ -27,11 +28,17 @@ jobs:
       - name: Plan Terraform
         run: terraform plan -out=tfplan
 
-      - name: Run tfsec
-        uses: liamg/tfsec-action@v0.5.0
-        with:
-          args: --no-color
-
       - name: Apply Terraform
         if: github.event_name == 'push' && github.ref != 'refs/heads/main'
         run: terraform apply -auto-approve tfplan
+
+  tfsec:
+    needs: terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run tfsec
+        run: docker run --rm -v ${{ github.workspace }}:/tf aquasec/tfsec /tf --no-color
