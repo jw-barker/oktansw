@@ -1,0 +1,30 @@
+[
+    {
+      "name": "Policy1",
+      "type": "PASSWORD",
+      "settings": {
+        "minLength": 8,
+        "maxLength": 20,
+        "requireNumber": true,
+        "requireLower": true,
+        "requireUpper": true,
+        "requireSymbol": true,
+        "excludeUsername": true
+      }
+    },
+    {
+      "name": "Policy2",
+      "type": "MFA_ENROLL",
+      "settings": {
+        "factorTypes": ["sms", "call", "email"]
+      }
+    },
+    {
+      "name": "Policy3",
+      "type": "SESSION",
+      "settings": {
+        "maxSessionIdleMinutes": 60,
+        "maxSessionLifetimeMinutes": 1440
+      }
+    }
+  ]

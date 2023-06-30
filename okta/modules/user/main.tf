@@ -1,24 +1,35 @@
 variable "okta_token" {
-  description = "Name of the secret containing the Okta API token in Azure Key Vault"
+  description = "Okta API token"
+  type        = string
 }
 
 variable "okta_org" {
-  description = "Okta organisation URL"
+  description = "Okta organization URL"
+  type        = string
+}
+
+variable "users" {
+  description = "List of users"
+  type        = list(object({
+    username   = string
+    email      = string
+    first_name = string
+    last_name  = string
+  }))
 }
 
 provider "okta" {
-  token     = data.azure_key_vault_secret.okta_token.value
-  base_url  = var.okta_org
+  token     = var.okta_token
+  org_url   = var.okta_org
 }
 
-module "okta_users" {
-  source     = "./users"
+resource "okta_user" "users" {
+  count = length(var.users)
 
-  okta_token = data.azure_key_vault_secret.okta_token.value
-  okta_org   = var.okta_org
-}
-
-data "azure_key_vault_secret" "okta_token" {
-  name         = var.okta_token
-  key_vault_id = "<AZURE_KEY_VAULT_ID>"
+  profile {
+    login     = var.users[count.index].username
+    email     = var.users[count.index].email
+    firstName = var.users[count.index].first_name
+    lastName  = var.users[count.index].last_name
+  }
 }

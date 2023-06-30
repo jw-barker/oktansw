@@ -1,8 +1,8 @@
-provider "azurerm" {
-  # Configure Azure provider settings here
+provider "okta" {
+  org_url = var.okta_org
+  token   = var.okta_token
 }
 
-provider "okta" {
-  token     = data.azure_key_vault_secret.okta_token.value
-  base_url  = var.okta_org
+provider "azurerm" {
+  features {}
 }
